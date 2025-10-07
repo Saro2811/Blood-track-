@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Blood Track</title>
+<style>
+body{
+  font-family:Poppins,Arial,sans-serif;
+  margin:0;
+  background:#fafafa;
+  color:#333;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* 🔴 Background image with transparency */
+body::before {
+  content:"";
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:url('giveblood.jpg') no-repeat center center;
+  background-size:cover;
+  opacity:0.45; /* 45% transparency */
+  z-index:-1; /* keeps it behind everything */
+}
+
+nav{
+  background:#c82333;
+  color:#fff;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+}
+nav a{
+  color:#fff;
+  text-decoration:none;
+  margin-left:15px;
+}
+nav a:hover{text-decoration:underline;}
+
+.main{
+  text-align:center;
+  padding:60px 20px;
+}
+.main h2{
+  font-size:28px;
+  margin-bottom:10px;
+}
+.main p{
+  font-size:16px;
+  margin-bottom:40px;
+}
+.btn-container{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.btn{
+  background:#c82333;
+  color:#fff;
+  padding:15px 30px;
+  border:none;
+  border-radius:8px;
+  font-size:18px;
+  text-decoration:none;
+  transition:0.3s;
+  cursor:pointer;
+}
+.btn:hover{background:#a71d2a;}
+
+section{
+  padding:40px 20px;
+  max-width:900px;
+  margin:auto;
+  display:none;
+}
+form{
+  background:rgba(255,255,255,0.9);
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+label{display:block;margin-top:10px;font-weight:600;}
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+button{
+  margin-top:20px;
+  background:#c82333;
+  color:#fff;
+  border:none;
+  padding:12px;
+  width:100%;
+  font-size:16px;
+  border-radius:6px;
+  cursor:pointer;
+}
+button:hover{background:#a71d2a;}
+footer{
+  background:#222;
+  color:#fff;
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <h1>🩸 Blood Track</h1>
+  <div>
+    <a href="#" id="homeLink">Home</a>
+    <a href="#" id="registerLink">Register</a>
+    <a href="#" id="searchLink">Search</a>
+  </div>
+</nav>
+
+<!-- Home Section -->
+<div class="main" id="homeSection">
+  <h2>Welcome to Blood Track</h2>
+  <p>Connect donors with people in need and save lives.</p>
+  <div class="btn-container">
+    <button class="btn" id="openRegister">🩸 Register as Donor</button>
+    <button class="btn" id="openSearch">🔍 Search Donor</button>
+  </div>
+</div>
+
+<!-- Register Section -->
+<section id="registerSection">
+  <h2 style="text-align:center;">Register as Donor</h2>
+  <form id="donorForm">
+    <label>Full Name</label>
+    <input type="text" id="name" required>
+    
+    <label>Blood Group</label>
+    <select id="bloodGroup" required>
+      <option value="">Select</option><option>A+</option><option>A-</option>
+      <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+      <option>O+</option><option>O-</option>
+    </select>
+    
+    <label>Address</label>
+    <input type="text" id="address" required>
+    
+    <label>Phone Number</label>
+    <input type="text" id="phone" required placeholder="+91XXXXXXXXXX">
+    
+    <label>Radius (km)</label>
+    <input type="number" id="radius" required>
+    
+    <label>Proof of Blood Group</label>
+    <input type="file" id="proof" accept="image/*">
+    
+    <label>OTP Verification (Demo)</label>
+    <input type="text" id="otp" placeholder="Enter OTP">
+    
+    <button type="submit">Submit Registration</button>
+  </form>
+</section>
+
+<!-- Search Section -->
+<section id="searchSection">
+  <h2 style="text-align:center;">Search Donor</h2>
+  <form id="searchForm">
+    <label>Blood Group</label>
+    <select id="searchBloodGroup" required>
+      <option value="">Select</option><option>A+</option><option>A-</option>
+      <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+      <option>O+</option><option>O-</option>
+    </select>
+    
+    <label>Location (City or Area)</label>
+    <input type="text" id="searchLocation" required>
+    
+    <button type="submit">Search</button>
+  </form>
+  
+  <div id="searchResults" style="margin-top:20px;text-align:center;"></div>
+</section>
+
+<footer>© 2025 Blood Track</footer>
+
+<script>
+// Select elements
+const homeSection = document.getElementById('homeSection');
+const registerSection = document.getElementById('registerSection');
+const searchSection = document.getElementById('searchSection');
+
+const openRegister = document.getElementById('openRegister');
+const openSearch = document.getElementById('openSearch');
+const homeLink = document.getElementById('homeLink');
+const registerLink = document.getElementById('registerLink');
+const searchLink = document.getElementById('searchLink');
+
+const form = document.getElementById('donorForm');
+const searchForm = document.getElementById('searchForm');
+const searchResults = document.getElementById('searchResults');
+
+// Navigation display functions
+function showHome() {
+  homeSection.style.display = 'block';
+  registerSection.style.display = 'none';
+  searchSection.style.display = 'none';
+}
+function showRegister() {
+  homeSection.style.display = 'none';
+  registerSection.style.display = 'block';
+  searchSection.style.display = 'none';
+}
+function showSearch() {
+  homeSection.style.display = 'none';
+  registerSection.style.display = 'none';
+  searchSection.style.display = 'block';
+}
+
+// Click events
+openRegister.addEventListener('click', showRegister);
+openSearch.addEventListener('click', showSearch);
+registerLink.addEventListener('click', showRegister);
+searchLink.addEventListener('click', showSearch);
+homeLink.addEventListener('click', showHome);
+
+// Form submission (demo)
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  alert('✅ Donor Registered Successfully!');
+  form.reset();
+  showHome();
+});
+
+// Search form (demo)
+searchForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const group = document.getElementById('searchBloodGroup').value;
+  const loc = document.getElementById('searchLocation').value;
+  searchResults.innerHTML = `<p>🔍 Searching for <b>${group}</b> donors near <b>${loc}</b>...</p><p style="color:gray;">(Demo Mode: Results will appear here)</p>`;
+});
+</script>
+
+</body>
+</html>
